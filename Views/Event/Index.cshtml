@@ -1,0 +1,33 @@
+@model IEnumerable<EventManagementSystem.Models.Event>
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+<h1>Index</h1>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.First().EventName)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.First().Date)  // Ensure this line correctly references Date
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model) {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.EventName)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Date)  // Ensure this line correctly references Date
+            </td>
+        </tr>
+}
+    </tbody>
+</table>
