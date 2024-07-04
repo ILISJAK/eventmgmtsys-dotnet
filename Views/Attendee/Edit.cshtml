@@ -1,4 +1,4 @@
-@model EventManagementSystem.Models.Attendee
+@model EventManagementSystem.ViewModels.AttendeeViewModel
 
 @{
     ViewData["Title"] = "Edit Attendee";
@@ -6,36 +6,14 @@
 
 <h1>Edit Attendee</h1>
 
-<h4>Attendee</h4>
-<hr />
-<div class="row">
-    <div class="col-md-4">
-        <form asp-action="Edit">
-            <div class="form-group">
-                <label asp-for="Name" class="control-label"></label>
-                <input asp-for="Name" class="form-control" />
-                <span asp-validation-for="Name" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Email" class="control-label"></label>
-                <input asp-for="Email" class="form-control" />
-                <span asp-validation-for="Email" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="PhoneNumber" class="control-label"></label>
-                <input asp-for="PhoneNumber" class="form-control" />
-                <span asp-validation-for="PhoneNumber" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="EventId" class="control-label"></label>
-                <input asp-for="EventId" class="form-control" />
-                <span asp-validation-for="EventId" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <input type="submit" value="Save" class="btn btn-primary" />
-            </div>
-        </form>
-    </div>
+<div>
+    <form asp-action="Edit">
+        <input type="hidden" asp-for="Attendee.Id" />
+        <partial name="_AttendeeForm" model="Model.Attendee" />
+        <div class="form-group">
+            <input type="submit" value="Save" class="btn btn-primary" />
+        </div>
+    </form>
 </div>
 <div>
     <a asp-action="Index">Back to List</a>

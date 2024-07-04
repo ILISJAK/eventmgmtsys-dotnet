@@ -1,4 +1,3 @@
-// Controllers/AttendeeController.cs
 using Microsoft.AspNetCore.Mvc;
 using EventManagementSystem.Services;
 using EventManagementSystem.Models;
@@ -6,6 +5,7 @@ using EventManagementSystem.ViewModels;
 using System.Threading.Tasks;
 using System.Linq;
 using Microsoft.Extensions.Logging;
+using Microsoft.AspNetCore.Mvc.Rendering;
 
 namespace EventManagementSystem.Controllers
 {
@@ -43,7 +43,6 @@ namespace EventManagementSystem.Controllers
             return View(attendee);
         }
 
-
         public async Task<IActionResult> Create()
         {
             _logger.LogInformation("Create GET action called.");
@@ -67,9 +66,10 @@ namespace EventManagementSystem.Controllers
 
             _logger.LogInformation($"ViewModel created with {viewModel.Events.Count} events.");
 
+            ViewBag.Events = new SelectList(viewModel.Events, "Id", "EventName");
+
             return View(viewModel);
         }
-
 
         [HttpPost]
         [ValidateAntiForgeryToken]
@@ -77,12 +77,21 @@ namespace EventManagementSystem.Controllers
         {
             _logger.LogInformation("Create POST action called.");
 
-            // Log incoming model values
-            _logger.LogInformation($"Incoming Attendee Name: {viewModel.Attendee.Name}");
-            _logger.LogInformation($"Incoming Attendee Email: {viewModel.Attendee.Email}");
-            _logger.LogInformation($"Incoming Attendee PhoneNumber: {viewModel.Attendee.PhoneNumber}");
-            _logger.LogInformation($"Incoming Attendee EventId: {viewModel.Attendee.EventId}");
-            _logger.LogInformation($"Incoming Attendee Event: {(viewModel.Attendee.Event != null ? "Provided" : "Null")}");
+            if (viewModel.Attendee == null)
+            {
+                _logger.LogWarning("Attendee property is null in the incoming view model.");
+                ModelState.AddModelError(string.Empty, "Attendee information is required.");
+            }
+            else
+            {
+                // Log incoming model values
+                _logger.LogInformation($"Incoming Attendee Name: {viewModel.Attendee.Name}");
+                _logger.LogInformation($"Incoming Attendee Email: {viewModel.Attendee.Email}");
+                _logger.LogInformation($"Incoming Attendee PhoneNumber: {viewModel.Attendee.PhoneNumber}");
+                _logger.LogInformation($"Incoming Attendee EventId: {viewModel.Attendee.EventId}");
+            }
+
+            _logger.LogInformation($"ModelState.IsValid: {ModelState.IsValid}");
 
             if (ModelState.IsValid)
             {
@@ -101,7 +110,10 @@ namespace EventManagementSystem.Controllers
                 }
             }
 
-            viewModel.Events = (await _eventService.GetAllEventsAsync()).ToList() ?? new List<Event>();
+            var events = await _eventService.GetAllEventsAsync() ?? new List<Event>();
+            viewModel.Events = events.ToList();
+            ViewBag.Events = new SelectList(events, "Id", "EventName");
+
             _logger.LogInformation($"ViewModel updated with {viewModel.Events.Count} events after validation failed.");
 
             return View(viewModel);
@@ -127,7 +139,10 @@ namespace EventManagementSystem.Controllers
             }
 
             _logger.LogWarning("Model state is invalid.");
-            viewModel.Events = (await _eventService.GetAllEventsAsync()).ToList() ?? new List<Event>();
+            var events = await _eventService.GetAllEventsAsync() ?? new List<Event>();
+            viewModel.Events = events.ToList();
+            ViewBag.Events = new SelectList(events, "Id", "EventName");
+
             _logger.LogInformation($"ViewModel updated with {viewModel.Events.Count} events after validation failed.");
 
             return View(viewModel);
@@ -154,6 +169,20 @@ namespace EventManagementSystem.Controllers
             await _attendeeService.DeleteAttendeeAsync(id);
             _logger.LogInformation($"Attendee with id: {id} deleted successfully.");
             return RedirectToAction(nameof(Index));
+        }
+
+        public async Task<IActionResult> GetAttendeesByEvent(int eventId)
+        {
+            var attendees = await _attendeeService.GetAllAttendeesAsync();
+            var filteredAttendees = attendees.Where(a => a.EventId == eventId).ToList();
+            return View(filteredAttendees);
+        }
+
+        public async Task<IActionResult> GetAttendeesByEmail(string email)
+        {
+            var attendees = await _attendeeService.GetAllAttendeesAsync();
+            var filteredAttendees = attendees.Where(a => a.Email == email).ToList();
+            return View(filteredAttendees);
         }
     }
 }

@@ -92,5 +92,19 @@ namespace EventManagementSystem.Controllers
             await _eventService.DeleteEventAsync(id);
             return RedirectToAction(nameof(Index));
         }
+        public async Task<IActionResult> GetEventsByDate(DateTime date)
+        {
+            var events = await _eventService.GetAllEventsAsync();
+            var filteredEvents = events.Where(e => e.Date.Date == date.Date).ToList();
+            return View(filteredEvents);
+        }
+
+        public async Task<IActionResult> GetEventsByLocation(string location)
+        {
+            var events = await _eventService.GetAllEventsAsync();
+            var filteredEvents = events.Where(e => e.Location == location).ToList();
+            return View(filteredEvents);
+        }
+
     }
 }

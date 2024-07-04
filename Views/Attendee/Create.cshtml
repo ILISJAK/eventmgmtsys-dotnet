@@ -10,27 +10,8 @@
 <hr />
 <div class="row">
     <div class="col-md-4">
-        <form asp-action="Create">
-            <div class="form-group">
-                <label asp-for="Attendee.Name" class="control-label"></label>
-                <input asp-for="Attendee.Name" class="form-control" />
-                <span asp-validation-for="Attendee.Name" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Attendee.Email" class="control-label"></label>
-                <input asp-for="Attendee.Email" class="form-control" />
-                <span asp-validation-for="Attendee.Email" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Attendee.PhoneNumber" class="control-label"></label>
-                <input asp-for="Attendee.PhoneNumber" class="form-control" />
-                <span asp-validation-for="Attendee.PhoneNumber" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Attendee.EventId" class="control-label"></label>
-                <select asp-for="Attendee.EventId" class="form-control" asp-items="@(Model.Events != null && Model.Events.Any() ? new SelectList(Model.Events, "Id", "EventName") : Enumerable.Empty<SelectListItem>())"></select>
-                <span asp-validation-for="Attendee.EventId" class="text-danger"></span>
-            </div>
+        <form id="attendeeForm" asp-action="Create">
+            <partial name="_AttendeeForm" model="Model" />
             <div class="form-group">
                 <input type="submit" value="Create" class="btn btn-primary" />
             </div>
@@ -43,5 +24,24 @@
 </div>
 
 @section Scripts {
-    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+
+    <script>
+        document.getElementById('attendeeForm').addEventListener('submit', function (event) {
+            event.preventDefault(); // Prevent the form from submitting immediately
+            var formHtml = document.getElementById('attendeeForm').innerHTML;
+            console.log("Form HTML before submission:", formHtml);
+
+            // Log each input's value
+            var inputs = document.querySelectorAll('#attendeeForm input, #attendeeForm select');
+            inputs.forEach(function (input) {
+                console.log(input.name + ": " + input.value);
+            });
+
+            // Submit the form after logging
+            this.submit();
+        });
+    </script>
 }
