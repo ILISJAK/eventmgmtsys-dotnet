@@ -1,3 +1,4 @@
+// Services/AttendeeService.cs
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using EventManagementSystem.Data;
@@ -17,26 +18,29 @@ namespace EventManagementSystem.Services
 
         public async Task<IEnumerable<Attendee>> GetAllAttendeesAsync()
         {
-            return await _context.Attendees.Include(a => a.Event).ToListAsync();
+            return await _context.Attendees.Include(a => a.Event).ToListAsync() ?? new List<Attendee>();
         }
 
         public async Task<Attendee> GetAttendeeByIdAsync(int id)
         {
             return await _context.Attendees.Include(a => a.Event)
-                                           .FirstOrDefaultAsync(a => a.Id == id);
+                                           .FirstOrDefaultAsync(a => a.Id == id) ?? new Attendee();
         }
 
         public async Task<Attendee> CreateAttendeeAsync(Attendee attendee)
         {
-            _context.Attendees.Add(attendee);
+            _context.Attendees.Add(attendee ?? new Attendee());
             await _context.SaveChangesAsync();
             return attendee;
         }
 
         public async Task UpdateAttendeeAsync(Attendee attendee)
         {
-            _context.Attendees.Update(attendee);
-            await _context.SaveChangesAsync();
+            if (attendee != null)
+            {
+                _context.Attendees.Update(attendee);
+                await _context.SaveChangesAsync();
+            }
         }
 
         public async Task DeleteAttendeeAsync(int id)

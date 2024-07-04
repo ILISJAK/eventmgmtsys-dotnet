@@ -30,6 +30,7 @@ namespace EventManagementSystem.Controllers
             return View(eventDetail);
         }
 
+
         public IActionResult Create()
         {
             return View();

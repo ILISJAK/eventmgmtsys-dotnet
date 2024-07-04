@@ -1,31 +1,35 @@
-using System.Diagnostics;
 using Microsoft.AspNetCore.Mvc;
+using EventManagementSystem.Services;
 using EventManagementSystem.Models;
+using System.Diagnostics;
+using System.Threading.Tasks;
 
-namespace EventManagementSystem.Controllers;
-
-public class HomeController : Controller
+namespace EventManagementSystem.Controllers
 {
-    private readonly ILogger<HomeController> _logger;
-
-    public HomeController(ILogger<HomeController> logger)
+    public class HomeController : Controller
     {
-        _logger = logger;
-    }
+        private readonly IEventService _eventService;
 
-    public IActionResult Index()
-    {
-        return View();
-    }
+        public HomeController(IEventService eventService)
+        {
+            _eventService = eventService;
+        }
 
-    public IActionResult Privacy()
-    {
-        return View();
-    }
+        public async Task<IActionResult> Index()
+        {
+            var events = await _eventService.GetAllEventsAsync();
+            return View(events);
+        }
 
-    [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
-    public IActionResult Error()
-    {
-        return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
+        public IActionResult Privacy()
+        {
+            return View();
+        }
+
+        [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
+        public IActionResult Error()
+        {
+            return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
+        }
     }
 }

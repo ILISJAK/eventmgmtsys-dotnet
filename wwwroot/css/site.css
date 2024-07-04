@@ -1,22 +1,23 @@
-html {
-  font-size: 14px;
+.header {
+    text-align: center;
+    margin-top: 50px;
 }
 
-@media (min-width: 768px) {
-  html {
-    font-size: 16px;
-  }
+.header h1 {
+    font-size: 3rem;
 }
 
-.btn:focus, .btn:active:focus, .btn-link.nav-link:focus, .form-control:focus, .form-check-input:focus {
-  box-shadow: 0 0 0 0.1rem white, 0 0 0 0.25rem #258cfb;
+.header p {
+    font-size: 1.5rem;
+    color: #6c757d;
 }
 
-html {
-  position: relative;
-  min-height: 100%;
+.event-card .card-img-top {
+    background-color: #007bff; /* You can change this to any color you like */
+    height: 200px;
 }
 
-body {
-  margin-bottom: 60px;
+.event-card .btn-primary {
+    background-color: #007bff;
+    border-color: #007bff;
 }

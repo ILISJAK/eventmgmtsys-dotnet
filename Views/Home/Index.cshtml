@@ -1,8 +1,30 @@
-﻿@{
+﻿@model IEnumerable<EventManagementSystem.Models.Event>
+@{
     ViewData["Title"] = "Home Page";
 }
 
-<div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://learn.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
+<div class="header">
+    <h1 class="display-4">Welcome to Event Management System</h1>
+    <p>Discover and manage events effortlessly</p>
+    <a href="/Event/Create" class="btn btn-primary btn-lg">Create an Event</a>
+</div>
+
+<div class="container mt-5">
+    <h2 class="text-center">Upcoming Events</h2>
+    <div class="row mt-4">
+        @foreach (var item in Model)
+        {
+            <div class="col-md-4 mb-4">
+                <div class="card event-card">
+                    <div class="card-img-top" style="height: 200px; background-color: #007bff;"></div>
+                    <div class="card-body">
+                        <h5 class="card-title">@item.EventName</h5>
+                        <p class="card-text">@item.Organizer</p>
+                        <a href="/Event/Details/@item.Id" class="btn btn-primary">View Details</a>
+                        <a href="/Event/Delete/@item.Id" class="btn btn-danger">Delete</a>
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
 </div>

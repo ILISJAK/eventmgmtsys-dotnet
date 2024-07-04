@@ -36,6 +36,38 @@
         </dd>
     </dl>
 </div>
+
+<div>
+    <h4>Attendees</h4>
+    <hr />
+    @if (Model.Attendees.Any())
+    {
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>Name</th>
+                    <th>Email</th>
+                    <th>PhoneNumber</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var attendee in Model.Attendees)
+                {
+                    <tr>
+                        <td>@attendee.Name</td>
+                        <td>@attendee.Email</td>
+                        <td>@attendee.PhoneNumber</td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    }
+    else
+    {
+        <p>No attendees registered for this event.</p>
+    }
+</div>
+
 <div>
     <a asp-action="Edit" asp-route-id="@Model.Id">Edit</a> |
     <a asp-action="Index">Back to List</a>
